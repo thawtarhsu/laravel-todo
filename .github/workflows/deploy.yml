@@ -1,0 +1,25 @@
+name: Create-file-on-lightsail
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # Allows you to run it manually like in your screenshot
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{secrets.HOST}}
+          username: ${{secrets.USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+            echo "Connected to Lightsail successfully!"
+            cd /var/www/html
+            # Add your laravel deployment commands here (e.g., git pull, php artisan migrate)
