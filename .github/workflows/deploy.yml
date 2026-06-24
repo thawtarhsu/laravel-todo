@@ -16,9 +16,9 @@ jobs:
       - name: Executing remote ssh commands using password
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USERNAME}}
-          key: ${{secrets.SSH_KEY}}
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
           script: |
             echo "Connected to Lightsail successfully!"
             cd /var/www/html
