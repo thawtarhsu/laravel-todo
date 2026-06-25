@@ -20,6 +20,6 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           script: |
-            echo "Connected to the Lightsail successfully!"
-            cd /var/www/html
+            echo "Connected to Lightsail successfully!"
+            cd ~/laravel-todo
             git pull origin main
