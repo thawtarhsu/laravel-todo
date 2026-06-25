@@ -1,25 +1,41 @@
-name: Create-file-on-lightsail
+name: Deploy Laravel to Lightsail
 
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch: # Allows you to run it manually like in your screenshot
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Executing remote ssh commands using password
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          script: |
-            echo "Connected to Lightsail successfully!"
-            cd ~/laravel-todo
-            git pull origin main
+    - name: Deploy via SSH
+      uses: appleboy/ssh-action@master
+      with:
+        host: 18.130.19.66
+        username: ubuntu
+        key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+        script: |
+          cd ~/laravel-todo
+          
+          # 1. Fetch the absolute newest code changes from GitHub
+          git pull origin main
+          
+          # 2. Install backend dependencies and clear stale caching states
+          composer install --no-interaction --prefer-dist --optimize-autoloader
+          php artisan optimize:clear
+          
+          # 3. Run database migrations safely in production mode
+          php artisan migrate --force
+          
+          # 4. Install Node packages and compile production Vite assets
+          npm install
+          npm run build
+          
+          # 5. Build optimized cache layers for blazing production speeds
+          php artisan config:cache
+          php artisan route:cache
+          php artisan view:cache
