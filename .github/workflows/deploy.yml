@@ -22,4 +22,4 @@ jobs:
           script: |
             echo "Connected to Lightsail successfully!"
             cd /var/www/html
-            # Add your laravel deployment commands here (e.g., git pull, php artisan migrate)
+            git pull origin main
